@@ -35,7 +35,10 @@
       "Bash(install_name_tool -change \"@rpath/WCDB.framework/Versions/2.1.15/WCDB\" \"@loader_path/libWCDB.dylib\" libwcdb_api.dylib)",
       "Bash(install_name_tool -id \"@rpath/libWCDB.dylib\" libWCDB.dylib)",
       "Bash(codesign --force --sign - libwcdb_api.dylib libWCDB.dylib)",
-      "Bash(otool -L /Users/jiqingzhe/Desktop/CipherTalk/resources/macos/libWCDB.dylib)"
+      "Bash(otool -L /Users/jiqingzhe/Desktop/CipherTalk/resources/macos/libWCDB.dylib)",
+      "Bash(node debug-bind.mjs)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(node --import tsx/esm debug-step2.mjs)"
     ],
     "additionalDirectories": [
       "d:\\JiQingzhe\\GitHub项目\\CipherTalk-wiki"
