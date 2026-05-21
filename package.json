@@ -212,6 +212,9 @@
       "!node_modules/**/*.obj",
       "!node_modules/**/*.pdb",
       "!node_modules/**/*.lib",
+      "!node_modules/**/build/!(Release)/**/*",
+      "node_modules/@fast-csv/*/build/**/*",
+      "node_modules/fast-csv/build/**/*",
       "!node_modules/**/deps/**/*",
       "node_modules/sqlite-vec*/**/*",
       "node_modules/koffi/build/**/*"
