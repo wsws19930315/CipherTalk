@@ -3211,12 +3211,26 @@ class ChatService extends EventEmitter {
   }
 
   private decodeHtmlEntities(content: string): string {
-    return content
+    const decodeCodePoint = (value: string, radix: 10 | 16, fallback: string): string => {
+      const codePoint = Number.parseInt(value, radix)
+      if (!Number.isFinite(codePoint) || codePoint < 0 || codePoint > 0x10FFFF) return fallback
+      try {
+        return String.fromCodePoint(codePoint)
+      } catch {
+        return fallback
+      }
+    }
+
+    return String(content || '')
       .replace(/&amp;/g, '&')
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
       .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
       .replace(/&apos;/g, "'")
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&#x([0-9a-fA-F]+);/g, (entity, hex) => decodeCodePoint(hex, 16, entity))
+      .replace(/&#(\d+);/g, (entity, dec) => decodeCodePoint(dec, 10, entity))
   }
 
   private cleanString(str: string): string {

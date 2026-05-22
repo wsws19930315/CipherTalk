@@ -19,15 +19,29 @@ export default function ChatHistoryPage() {
         return match ? match[1] : ''
     }
 
-    // 简单的 HTML 实体解码（常见几种即可）
+    // HTML 实体解码，兼容微信 XML 里的十进制/十六进制数字实体
     const decodeHtmlEntities = (text?: string): string | undefined => {
         if (!text) return text
+        const decodeCodePoint = (value: string, radix: 10 | 16, fallback: string): string => {
+            const codePoint = Number.parseInt(value, radix)
+            if (!Number.isFinite(codePoint) || codePoint < 0 || codePoint > 0x10FFFF) return fallback
+            try {
+                return String.fromCodePoint(codePoint)
+            } catch {
+                return fallback
+            }
+        }
+
         return text
             .replace(/&lt;/g, '<')
             .replace(/&gt;/g, '>')
             .replace(/&amp;/g, '&')
             .replace(/&quot;/g, '"')
             .replace(/&#39;/g, "'")
+            .replace(/&apos;/g, "'")
+            .replace(/&nbsp;/g, ' ')
+            .replace(/&#x([0-9a-fA-F]+);/g, (entity, hex) => decodeCodePoint(hex, 16, entity))
+            .replace(/&#(\d+);/g, (entity, dec) => decodeCodePoint(dec, 10, entity))
     }
 
     // 前端兜底解析合并转发聊天记录 (与后端逻辑类似)
